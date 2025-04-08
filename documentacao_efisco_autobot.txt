@@ -1,0 +1,65 @@
+
+DOCUMENTAÇÃO DO PROJETO DE AUTOMAÇÃO - ACESSO E-FISCO COM CERTIFICADO DIGITAL
+------------------------------------------------------------------------------
+
+🗓️ Data de geração: 07/04/2025 20:37:03
+
+🔹 OBJETIVO DO PROJETO:
+Automatizar o processo de login no portal do e-Fisco de Pernambuco utilizando certificado digital do tipo .pfx, acessar a área de "Consulta e Download de NFe" e realizar uma consulta automática de notas fiscais, resolvendo o reCAPTCHA via integração com a API AntiCaptcha.
+
+------------------------------------------------------------------------------
+
+🔹 FLUXO DO SCRIPT ATUALMENTE:
+
+1. **Instalação do Certificado Digital**
+   - O certificado é fornecido pelo usuário no formato `.pfx` e instalado automaticamente no repositório de certificados do Windows (`CurrentUser\My`) utilizando PowerShell.
+
+2. **Acesso ao Portal e-Fisco**
+   - O script acessa a URL: `https://efisco.sefaz.pe.gov.br/sfi_com_sca/PRMontarMenuAcesso`.
+   - Clica automaticamente no botão "Certificado Digital".
+   - Usa `pyautogui` para pressionar `Enter` e confirmar o certificado instalado.
+
+3. **Navegação até Consulta de NFe**
+   - Utiliza o campo de busca principal da aplicação para pesquisar "Consulta e Download de NFe (#)".
+   - Clica no resultado da busca.
+   - Abre nova aba com a página específica da consulta.
+
+4. **Preenchimento dos Filtros de Consulta**
+   - Data Inicial: `01/01/2025`
+   - Data Final: `01/01/2025`
+   - Tipo de contribuinte: `Emitente`
+   - IE Emitente: `056680422`
+
+5. **Resolução Automática do reCAPTCHA**
+   - O script captura a `sitekey` presente na página.
+   - Envia a chave para a API do AntiCaptcha.
+   - Ao receber o token, injeta no campo oculto `g-recaptcha-response` da página.
+   - Após isso, o botão "Consultar" é clicado automaticamente.
+
+------------------------------------------------------------------------------
+
+🔹 FERRAMENTAS E TECNOLOGIAS UTILIZADAS:
+
+- `Selenium`: automação do navegador.
+- `pyautogui`: controle do teclado para interagir com o seletor de certificado.
+- `AntiCaptcha (anticaptchaofficial)`: resolução automática de reCAPTCHA v2.
+- `Tkinter`: seleção e senha do certificado (fase inicial do projeto).
+- `PowerShell`: instalação silenciosa do certificado.
+- `WebDriverManager`: gerenciamento automático do driver do Chrome.
+
+------------------------------------------------------------------------------
+
+🔹 FUNCIONALIDADES FUTURAS SUGERIDAS:
+
+- Automatizar o preenchimento de campos adicionais (CNPJ, série, etc.).
+- Baixar e organizar os arquivos XML ou PDF das notas retornadas.
+- Exportar os dados para planilhas Excel.
+- Adicionar interface visual (GUI).
+- Reutilizar o script para múltiplas empresas com agendamento automático.
+
+------------------------------------------------------------------------------
+
+🔹 OBSERVAÇÃO:
+
+O script atualmente é compatível com Windows (por conta da instalação do certificado via PowerShell) e depende que o Chrome esteja instalado. A automação é sensível ao tempo de carregamento da página e à existência de apenas um certificado instalado.
+
